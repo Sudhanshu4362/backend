@@ -19,7 +19,9 @@ let user = [{
 ];
 
 const userRouter = express.Router();
+const authRouter = express.Router();
 app.use('/user',userRouter);
+app.use("/auth",authRouter);
 userRouter
 .route("/")
 .get(getUser)
@@ -27,7 +29,13 @@ userRouter
 .patch(patchUser)
 .delete(deleteUser)
 
-userRouter.route("/:id").get(getUserById)
+userRouter
+.route("/:id")
+.get(getUserById)
+
+authRouter
+.route("/signup")
+.get(getSignUp).post(postSignUp);
 // app.get('/user',)
 
 // app.post('/user',)
@@ -86,4 +94,18 @@ function getUserById(req, res){
     res.json({ msg: "user id is ", "obj": req.params });
 }
 
+function getSignUp(req,res) {
+    res.sendFile("/public/index.html",{root:__dirname})
+}
+
+function postSignUp(req,res) {
+    let {email,name,password} = req.body;
+    console.log(req.body);
+    res.json({
+        msg:"user signed up",
+        email,
+        name,
+        password
+    }) 
+}
 app.listen(5000);
