@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-let users = [{
+let user = [{
     id: 1,
     name : "sid",
     age : 21
@@ -19,7 +19,7 @@ let users = [{
 ];
 
 const userRouter = express.Router();
-app.use('/users',userRouter);
+app.use('/user',userRouter);
 userRouter
 .route("/")
 .get(getUser)
@@ -28,18 +28,18 @@ userRouter
 .delete(deleteUser)
 
 userRouter.route("/:id").get(getUserById)
-// app.get('/users',)
+// app.get('/user',)
 
-// app.post('/users',)
+// app.post('/user',)
 
 
-// app.patch('/users',)
+// app.patch('/user',)
 
-// app.delete('/users',)
+// app.delete('/user',)
 
 
 //params
-// app.get('/users/:id',)
+// app.get('/user/:id',)
 
 function getUser(req, res){
     console.log(req.query);
