@@ -17,51 +17,73 @@ let users = [{
     age : 22
 }
 ];
-//with query
-app.get('/users',(req,res) => {
-    console.log(req.query);
-    let {name,age} = req.query;
-    let filteredData =  users.filter((userObj) => {
-        return (userObj.name === name && userObj.age === age)
-    })
-    res.send(filteredData)
-    // res.send(users);
-})
 
-app.post('/users',(req,res) => {
-    console.log(req.body);
-    res.json({
-        messsage:"Data recieved successfully",
-        user: req.body
-    })
-})
+const userRouter = express.Router();
+app.use('/users',userRouter);
+userRouter
+.route("/")
+.get(getUser)
+.post(postUser)
+.patch(patchUser)
+.delete(deleteUser)
+
+userRouter.route("/:id").get(getUserById)
+// app.get('/users',)
+
+// app.post('/users',)
 
 
-app.patch('/users',(req,res) => {
-    console.log(req.body);
-    let dataToBeUpdated = req.body;
-    for(key in dataToBeUpdated) {
-        users[key]  = dataToBeUpdated
-    }
-    res.json({
-        messsage:"data updated successfully"
-    })
-})
+// app.patch('/users',)
 
-app.delete('/users',(req,res) => {
-    users = {};
-    res.json({
-        msg : "user has been deleted"
-    })
-})
+// app.delete('/users',)
 
 
 //params
-app.get('/users/:id',(req,res) => {
-    console.log(req.params.id);
-    // let {id} = req.params;
+// app.get('/users/:id',)
+
+function getUser(req, res){
+    console.log(req.query);
+    let { name, age } = req.query;
+    // let filteredData=user.filter(userObj => {
+    //     return (userObj.name==name && userObj.age==age)
+    // })
+    // res.send(filteredData);
+    res.send(user);
+}
+
+function postUser(req, res){
+    console.log(req.body.Name);
+    //then i can put this in db 
+    user.push(req.body);
+    res.json({
+        message: "Data received successfully",
+        user: req.body
+    });
+}
+
+function patchUser(req, res){
+    console.log(req.body);
+    let dataToBeUpdated = req.body;
+    for (key in dataToBeUpdated) {
+        user[key] = dataToBeUpdated[key];
+    }
+    res.json({
+        message: "data updated succesfully"
+    })
+}
+
+function deleteUser(req, res){
+    user = {};
+    res.json({
+        msg: "user has been deleted"
+    });
+}
+
+function getUserById(req, res){
+    console.log(req.params.name);
+    //let {id}=req.params;
     // let user = db.findOne(id);
-    res.json({msg : "user id is","obj":req.params});
-})
+    res.json({ msg: "user id is ", "obj": req.params });
+}
 
 app.listen(5000);
