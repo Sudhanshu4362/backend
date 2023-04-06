@@ -69,11 +69,15 @@ function middleware2(req, res,) {
 async function getUsers(req, res, next) {
     console.log(req.query);
     let { name, age } = req.query;
+
+    //filtering
     // let filteredData=user.filter(userObj => {
     //     return (userObj.name==name && userObj.age==age)
     // })
     // res.send(filteredData);
-    //get all users from database
+
+
+    //get all users from database --> mongodb 
     let allusers = await userModel.find()
 
     res.json({msg : "users retrieved",allusers});
@@ -92,19 +96,26 @@ function postUser(req, res) {
     });
 }
 
-function patchUser(req, res) {
+//update user
+ async function patchUser(req, res) {
     console.log(req.body);
     let dataToBeUpdated = req.body;
-    for (key in dataToBeUpdated) {
-        user[key] = dataToBeUpdated[key];
-    }
+    // for (key in dataToBeUpdated) {
+    //     user[key] = dataToBeUpdated[key];
+    //
+    let doc  = await userModel.findOneAndUpdate({email:"abc@gmail.com"},dataToBeUpdated)
     res.json({
         message: "data updated succesfully"
     })
 }
 
-function deleteUser(req, res) {
-    user = {};
+async function deleteUser(req, res) {
+    // user = {};
+
+    //we use remove if we have to give whole data of removed collection
+    //we use delete if we want to give count of deleted collection
+    let doc = await userModel.deleteOne({email:"ab2c@gmail.com"})
+    console.log(doc);
     res.json({
         msg: "user has been deleted"
     });
@@ -123,7 +134,8 @@ function getSignUp(req, res) {
 
 async function postSignUp(req, res) {
     // let { email, name, password } = req.body;
-    try {let data = req.body;
+    try {
+    let data = req.body;
     let user = await userModel.create(data);
     console.log(data);
     res.json({
@@ -174,6 +186,8 @@ const userSchema = mongoose.Schema({
 //model
 const userModel = mongoose.model("userModel", userSchema)
 
+
+//creating user
 // let obj = {
 //     1 : (async function createUser() {
 //         let user = {
