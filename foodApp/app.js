@@ -1,10 +1,7 @@
 const express = require("express");
 const app = express();
-const mongoose = require('mongoose')
-const { db_link } = require('./secrets')
-mongoose.set("strictQuery", false);
-const { Schema } = mongoose;
-
+const userModel = require('./models/userModel')
+// mongoose.set("strictQuery", false);
 app.use(express.json());
 
 let user = [{
@@ -151,40 +148,6 @@ catch(err){
 }
 app.listen(5000);
 
-mongoose.connect(db_link)
-    .then(function (db) {
-        console.log("db connected");
-    })
-    .catch(function (err) {
-        console.log(err);
-    });
-
-
-
-const userSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true,
-        minLength: 7
-    },
-    confirmpassword: {
-        type: String,
-        required: true,
-        minLength: 7
-    }
-})
-
-//model
-const userModel = mongoose.model("userModel", userSchema)
 
 
 //creating user
