@@ -1,6 +1,8 @@
 const express = require("express");
 const userRouter = express.Router();
 const userModel = require('../models/userModel')
+const jwt = require("jsonwebtoken");
+const JWT_KEY = '2rwr34w3ese6fese';
 userRouter
     .route("/")
     //first middleware 1 will run after excuting it getUser will run through next and then middleware2 will run and we will get our response
@@ -19,6 +21,23 @@ userRouter
   .route("/:name")
   .get(getUserById)
 
+function protectRoute(req,res,next) {
+    if(req.cookies.login) {
+        let token = req.cookies.login
+        let isVerified = jwt.verify(token,JWT_KEY);
+        if(isVerified) {
+            next();
+        } else {
+            req.json({
+                msg : "user not verified"
+            })
+        }
+    } else {
+        return res.json({
+            msg : 'operation not allowed'
+        })
+    }
+}
 async function getUsers(req, res, next) {
     // console.log(req.query);
     // let { name, age } = req.query;
@@ -90,14 +109,4 @@ function getCookies(req,res){
 }
 
 // let isLoggedIn = true;
-
-function protectRoute(req,res,next) {
-    if(req.cookie.isLoggedIn) {
-        next();
-    } else {
-        return res.json({
-            msg : 'operation not allowed'
-        })
-    }
-}
 module.exports = userRouter
