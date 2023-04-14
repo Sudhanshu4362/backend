@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
 const userModel = require('./models/userModel')
-// mongoose.set("strictQuery", false);
+const cookieParser = require('cookie-parser')
 app.use(express.json());
+app.use(cookieParser());
 
 let user = [{
     id: 1,
@@ -32,14 +33,10 @@ userRouter
     .post(postUser)
     .patch(patchUser)
     .delete(deleteUser)
-
-userRouter
-    .route("/:id")
-    .get(getUserById)
-
-authRouter
-    .route("/signup")
-    .get(getSignUp).post(postSignUp);
+userRouter.route("/setcookies").get(setCookies)
+userRouter.route("/getcookies").get(getCookies)
+userRouter.route("/:name").get(getUserById)
+authRouter.route("/signup").get(getSignUp).post(postSignUp);
 // app.get('/user',)
 
 // app.post('/user',)
@@ -145,6 +142,18 @@ catch(err){
         err
     })
 }
+}
+
+function setCookies(req,res){
+    // res.setHeader('set-Cookie','isLoggedIn = true');
+    res.cookie('isLoggedIn',false,{maxAge:10000,secure :true});
+    res.cookie('password',12345678,{secure :true});
+    res.send('cookies has been set')
+}
+function getCookies(req,res){
+   let cookies = req.cookie.password;
+   console.log(cookies);
+   res.send('cookies recieved')
 }
 app.listen(5000);
 
