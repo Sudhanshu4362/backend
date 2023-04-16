@@ -2,7 +2,7 @@ const express = require("express");
 const userModel = require("../models/userModel");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
-const JWT_KEY = '2rwr34w3ese6fese'
+const {JWT_KEY} = require('../secrets')
 authRouter
    .route("/signup")
    .get(getSignUp)

@@ -31,15 +31,24 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         required: true,
+        minLength: 7
+    },
+    confirmpassword: {
+        type: String,
+        required: true,
         minLength: 7,
         validate: function() {
             return this.confirmpassword == this.password
         }
     },
-    confirmpassword: {
+    role : {
         type: String,
-        required: true,
-        minLength: 7
+        enum:['admin','user','restaurantowner'],
+        default :'user'
+    },
+    profileImage: {
+        type:String,
+        default :'img/user/default.jpg'
     }
 })
 // ------------->learning hooks<-------------------
