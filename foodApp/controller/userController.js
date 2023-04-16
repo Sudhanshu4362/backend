@@ -15,7 +15,7 @@ module.exports.getUser =  async function(req, res, next) {
 //update user
 module.exports.updateUser =  async function(req, res) {
     console.log(req.body);
-    let id = req.params.id;
+    let id = req.id;
     let user = await userModel.findById(id);
     let dataToBeUpdated = req.body;
     try{

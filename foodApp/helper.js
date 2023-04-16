@@ -1,20 +1,39 @@
 const jwt = require("jsonwebtoken");
-const {JWT_KEY}= require('./secrets');
+const userModel = require("./models/userModel");
+const { JWT_KEY } = require("./secrets");
 
-module.exports.protectRoute =  function(req,res,next) {
-    if(req.cookies.login) {
-        let token = req.cookies.login
-        let isVerified = jwt.verify(token,JWT_KEY);
-        if(isVerified) {
-            next();
-        } else {
-            req.json({
-                msg : "user not verified"
-            })
-        }
+
+module.exports.protectRoute = async function (req, res, next) {
+    let token;
+    if (req.cookies.login) {
+      token = req.cookies.login;
+      let payloadObj = jwt.verify(token, JWT_KEY);
+      const user = await userModel.findById(payloadObj.payload);
+      req.id = user.id;
+      req.role = user.role;
+      if (isVerified) next();
+      else {
+        req.json({
+          msg: "user not verified",
+        });
+      }
     } else {
-        return res.json({
-            msg : 'operation not allowed'
-        })
+      return res.json({
+        msg: "opertion not allowed",
+      });
     }
-}
+  };
+
+//isAutorised-? check the user's role
+// client will send role key in req obj
+module.exports.isAuthorised = function(roles) {
+    return function(req,res,next) {
+        let role = req.role;
+        if(roles.include(role)){
+            next();
+        }
+        res.status(401).json({
+            msg: "operation not allowed",
+        });
+    };
+};
