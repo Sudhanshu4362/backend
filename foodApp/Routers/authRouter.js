@@ -1,15 +1,17 @@
 const express = require("express");
-const userModel = require("../models/userModel");
 const authRouter = express.Router();
-const jwt = require("jsonwebtoken");
-const {JWT_KEY} = require('../secrets')
+const userModel = require("../models/userModel");
+var jwt = require("jsonwebtoken");
+const { JWT_KEY } =require('../helper')
 // authRouter
-//    .route("/signup")
-//    .get(getSignUp)
-//    .post(postSignUp);
+//     .route("/signup")
+//     .get(getSignup)
+//     .post(postSignup);
 
 // authRouter
-//    .route('/login')
-//    .post(loginUser);
+//     .route('/login')
+//     .post(loginUser);
 
-module.exports = authRouter
+
+
+module.exports = authRouter;

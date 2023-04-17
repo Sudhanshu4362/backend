@@ -1,78 +1,77 @@
-const mongoose = require('mongoose')
-const { db_link } = require("../secrets")
-const emailValidator = require("email-validator");
-const { Schema } = mongoose;
+const mongoose = require("mongoose");
 mongoose.set('strictQuery', false)
+const { db_link } = require("../secrets");
+const emailValidator = require("email-validator");
 const bcrypt = require('bcrypt');
-
-mongoose.connect(db_link)
-    .then(function (db) {
-        console.log("db connected");
-    })
-    .catch(function (err) {
-        console.log(err);
-    });
-
-
+mongoose
+  .connect(db_link)
+  .then(function (db) {
+    console.log("db connected");
+    // console.log(db);
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
 
 const userSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: function () {
+      return emailValidator.validate(this.email);
     },
-    email: {
-        type: String,
-        unique: true,
-        required: true,
-        validate: function() {
-            return emailValidator.validate(this.email);
-        }
+  },
+  password: {
+    type: String,
+    required: true,
+    minLength: 7,
+  },
+  confirmPassword: {
+    type: String,
+    required: true,
+    minLength: 7,
+    validate: function () {
+      return this.confirmPassword == this.password;
     },
-    password: {
-        type: String,
-        required: true,
-        minLength: 7
-    },
-    confirmpassword: {
-        type: String,
-        required: true,
-        minLength: 7,
-        validate: function() {
-            return this.confirmpassword == this.password
-        }
-    },
-    role : {
-        type: String,
-        enum:['admin','user','restaurantowner'],
-        default :'user'
-    },
-    profileImage: {
-        type:String,
-        default :'img/user/default.jpg'
-    }
-})
-// ------------->learning hooks<-------------------
-//pre and post hooks in mongoose
-// userSchema.pre('save',function() {
-//     console.log("before saving in db");
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'user', 'restaurantowner', 'deliveryboy'],
+    default:'user'
+  },
+  profileImage: {
+    type: String,
+    default:'img/users/default.jpg'
+  }
+});
+
+//-------------->learning hooks<-----------------
+// userSchema.pre('save', function () {
+//   console.log("before saving in db");
 // })
 
-// userSchema.post("save",function() {
-//     console.log("after saving in db");
-// })
+// userSchema.post("save", function () {
+//   console.log("after saving in db");
+// });
 
-userSchema.pre('save',function() {
-    // console.log("before saving in db");
-    this.confirmpassword = undefined;
-})
+userSchema.pre("save", function () {
+  // console.log("before saving in db");
+  this.confirmPassword = undefined;
+});
 
-// userSchema.pre('save',async function() {
+// userSchema.pre('save', async function () {
 //     let salt = await bcrypt.genSalt();
-//     let hashedString = await bcrypt.hash(this.password,salt)
-//     this.password = hashedString
+//     console.log(salt);
+//     let hashedString = await bcrypt.hash(this.password, salt);
+//     this.password = hashedString;
 //     // console.log(hashedString);
 // })
-//model
-const userModel = mongoose.model("userModel", userSchema)
 
-module.exports = userModel
+//models
+const userModel = mongoose.model("userModel", userSchema);
+module.exports = userModel;

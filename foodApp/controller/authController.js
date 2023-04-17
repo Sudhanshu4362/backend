@@ -1,22 +1,23 @@
 const userModel = require("../models/userModel");
-const jwt = require("jsonwebtoken");
+var jwt = require("jsonwebtoken");
 const { JWT_KEY } = require("../secrets");
 
 
 module.exports.signup=async function (req, res) {
   try {
-   let data = req.body;//{name,emaail,pass}
-   let user = await userModel.create(data);
-   if(user) {
-    res.json({
-        msg: "user signed up",
-        user,
-    })
-   } else {
-    res.json({
-        msg : "user could not be signed up",
-      });
-   }
+    let data = req.body; //nep
+      let user = await userModel.create(data);
+      if (user) {
+          res.json({
+            msg: "user signed up",
+            user,
+          });
+      }
+      else {
+          res.json({
+            msg: "user could not be signed up"
+          });
+      }
   } catch (err) {
     res.json({
       err: err.message,
@@ -26,10 +27,10 @@ module.exports.signup=async function (req, res) {
 
 module.exports.login=async function (req, res) {
   try {
-    let {email,password} = req.body;
-    let user = await userModel.findOne({email:email})
-    if(user){
-       //check if password matches
+    let { email, password } = req.body;
+    let user = await userModel.findOne({ email: email });
+    if (user) {
+      //check if password matches
       //bcrypt - compare
       if (password == user.password) {
         let uid = user["_id"];

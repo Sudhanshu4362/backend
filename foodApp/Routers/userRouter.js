@@ -1,29 +1,34 @@
 const express = require("express");
-const app = express();
 const userRouter = express.Router();
-const userModel = require('../models/userModel') 
-const {protectRoute,isAuthorised} = require('../helper')
-const {getUser,updateUser,deleteUser,getAllUser} = require('../controller/userController')
-const {signup,login} = require('../controller/authController')
-//user options
+const { getUser, postUser, updateUser, deleteUser, getAllUser} = require("../controller/userController");
+const {isAuthorised,protectRoute} = require('../helper');
+const { signup, login } = require('../controller/authController');
+
+//user ke options
 userRouter
-  .route('./:id')
+  .route('/:id')
   .patch(updateUser)
   .delete(deleteUser)
 
-  userRouter.route('/login')
-  .post(login);
-  userRouter.route('/signup')
-  .post(signup)
-//profile page
-app.use(protectRoute)
 userRouter
-  .route('/userProfile')
+  .route("/login")
+  .post(login);
+
+userRouter
+  .route("/signup")
+  .post(signup);
+
+
+//profile page
+userRouter.use(protectRoute)
+userRouter
+  .route('/profile')
   .get(getUser)
 
-//admin specific
-app.use(isAuthorised(['admin']))
-userRouter.route('')
-  .get(getAllUser)
+//admin specific function
+userRouter.use(isAuthorised(['admin']));
+userRouter.route('/')
+.get(getAllUser)
 
-module.exports = userRouter
+
+module.exports = userRouter;
