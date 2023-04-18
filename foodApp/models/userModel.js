@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
+mongoose.set('strictQuery', false)
 const { db_link } = require("../secrets");
 const emailValidator = require("email-validator");
 const bcrypt = require('bcrypt');
-import { v4 as uuidv4 } from "uuid";
+const uuidv4 = require("uuid");
 mongoose
   .connect(db_link)
   .then(function (db) {
-    console.log("db connected");
+    console.log("user db connected");
     // console.log(db);
   })
   .catch(function (err) {
@@ -85,10 +86,6 @@ userSchema.methods.resetPasswordHandler = function (password,confirmPassword) {
   this.confirmPassword = confirmPassword;
   this.resetToken = undefined;
 };
-
-
-
-
 
 
 //models

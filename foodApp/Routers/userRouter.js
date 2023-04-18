@@ -1,8 +1,14 @@
 const express = require("express");
 const userRouter = express.Router();
-const { getUser, postUser, updateUser, deleteUser, getAllUser} = require("../controller/userController");
+const {
+  getUser,
+  postUser,
+  updateUser,
+  deleteUser,
+  allUser,
+} = require("../controller/userController");
 const {isAuthorised,protectRoute} = require('../helper');
-const { signup, login } = require('../controller/authController');
+const { signup, login, forgetpassword, resetpassword, logout } = require('../controller/authController');
 
 //user ke options
 userRouter
@@ -18,6 +24,17 @@ userRouter
   .route("/signup")
   .post(signup);
 
+userRouter
+  .route("/forgetpassword")
+  .post(forgetpassword);
+
+userRouter
+  .route("/resetpassword/:token")
+  .post(resetpassword);
+
+userRouter
+  .route("/logout")
+  .get(logout);
 
 //profile page
 userRouter.use(protectRoute)
@@ -25,23 +42,9 @@ userRouter
   .route('/profile')
   .get(getUser)
 
-  userRouter
-    .route("/forgetpassword")
-    .post(forgetpassword);
-  userRouter
-    .route("/resetpassword/:token")
-    .post(resetpassword);
-
-  userRouter
-    .route("/logout")
-    .get(logout);
-
-
-    
 //admin specific function
 userRouter.use(isAuthorised(['admin']));
-userRouter.route('/')
-.get(getAllUser)
+userRouter.route("/").get(allUser);
 
 
 module.exports = userRouter;
