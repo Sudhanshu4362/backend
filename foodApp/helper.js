@@ -31,9 +31,10 @@ module.exports.isAuthorised = function (roles) {
     let role = req.role;
     if (roles.includes(role)) {
       next();
-    } else {
+    }
+    else {
       res.status(401).json({
-        msg: "Invalid role",
+        msg: "role invalid",
       });
     }
   };
