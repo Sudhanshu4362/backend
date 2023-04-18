@@ -106,3 +106,13 @@ module.exports.resetpassword = async function (req,res) {
     });
   }
 }
+
+//login -> jwt_key bnate the
+//logout -> destroy jwt_key (login cookie)
+
+module.exports.logout() = function() {
+  res.cookie('login', ' ', { maxAge: 1 });
+  res.json({
+    msg:'user logged out successfully'
+  })
+}

@@ -25,8 +25,17 @@ userRouter
   .route('/profile')
   .get(getUser)
 
-  userRouter.route("/forgetpassword").post(forgetpassword);
-  userRouter.route("/resetpassword/:token").post(resetpassword);
+  userRouter
+    .route("/forgetpassword")
+    .post(forgetpassword);
+  userRouter
+    .route("/resetpassword/:token")
+    .post(resetpassword);
+
+  userRouter
+    .route("/logout")
+    .get(logout);
+
 
     
 //admin specific function
