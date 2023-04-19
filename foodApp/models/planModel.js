@@ -33,7 +33,11 @@ const planSchema = mongoose.Schema({
     },
     ratingsAverage: {
         type: Number
-    }
+    },
+    // nor: {
+    //     type: Number,
+    //     default:0
+    // }
 });
 
 const planModel = mongoose.model("planModel", planSchema);

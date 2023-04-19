@@ -1,29 +1,23 @@
-const express = required("express");
+const express = require("express");
 const reviewRouter = express.Router();
-
-const { protectRoute, isAuthorised } = require('../helper');
-
-reviewRouter
-   .route("/all")
-   .get(getAllReviews);
+const { protectRoute } = require('../helper');
 
 reviewRouter
-   .route("/top3")
-   .get(top3Review);
+    .route("/all")
+    .get(getAllReviews);
 
 reviewRouter
-   .route("/:id")
-   .get(getPlanReview);
+    .route("/top3")
+    .get(top3Review);
 
-
+//all reviews of a particular plan
 reviewRouter
-   .route("")
-   .post(createReview);
+    .route("/:id")
+    .get(getPlanReview);
 
+reviewRouter.use(protectRoute)
 reviewRouter
-   .route("")
-   .patch(updateReview)
-   .delete(deleteReview);
-
-
-module.exports = reviewRouter
+   .route("/crud:/plan")
+    .post(createReview)
+    .patch(updateReview)
+    .delete(deleteReview)
