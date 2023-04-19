@@ -22,50 +22,47 @@ module.exports.getAllReviews = async function(req,res) {
     }
 }
 
-module.exports.top3Review = async function(req,res) {
-    try{
-        const top3 = await reviewModel.find().sort({rating:-1}).limit(3);
-        if(top3){
-            return res.json({
-                msg: "review retrieved",
-                top3
-            })
-        } else {
-            return res.json({
-                msg:"review not found"
-            })
-        }
+module.exports.top3Review = async function (req, res) {
+    try {
+      const top3 = await reviewModel.find().sort({ rating: -1 }).limit(3);
+      if (top3) {
+        return res.json({
+          msg: "review retrieved",
+          top3,
+        });
+      } else {
+        return res.json({
+          msg: "reviews not found",
+        });
+      }
+    } catch (err) {
+      res.json({
+        msg: err.message,
+      });
     }
-    catch(err){
-        res.json({
-            msg:err.message,
-        })
-    }
-}
+  };
 
-module.exports.getPlanReview = async function(req,res) {
-    try{
-        let planId = req.params.id;
-        const reviews = await reviewModel.find();
+  module.exports.getPlanReview = async function (req, res) {
+    try {
+      const planId = req.params.id;
+        let reviews = await reviewModel.find();
         reviews = reviews.filter(review => review.plan["_id"] == planId);
-        if(reviews){
-            return res.json({
-                msg: "review retrieved",
-                reviews
-            })
-        } else {
-            return res.json({
-                msg:"review not found"
-            })
-        }
+      if (reviews) {
+        return res.json({
+          msg: "reviews retrieved",
+          reviews,
+        });
+      } else {
+        return res.json({
+          msg: "reviews not found",
+        });
+      }
+    } catch (err) {
+      res.json({
+        msg: err.message,
+      });
     }
-    catch(err){
-        res.json({
-            msg:err.message,
-        })
-    }
-}
-
+  };
 module.exports.createReview = async function(req,res) {
     try{
         const planId = req.params.plan;
@@ -117,6 +114,7 @@ module.exports.updateReview = async function (req, res) {
 
 module.exports.deleteReview = async function (req, res) {
     try {
+      let planId = req.params.plan;
       let id = req.body.id;
       let review = await reviewModel.findByIdAndDelete(id);
       return res.json({
